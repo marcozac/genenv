@@ -1,0 +1,30 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Go
+*.test
+go.work
+/vendor
+
+# Coverage
+*.out
+cover.*
+
+# Temporary files
+tmp/
+*.tmp
+
+# IDE
+.vscode
+.history/
+.idea
+
+# Misc
+*~
+.DS_Store
+*.workspace
+.env
