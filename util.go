@@ -4,7 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
+
+	"gopkg.in/yaml.v3"
 )
 
 type ModInfo struct {
@@ -26,7 +29,7 @@ func GetModInfo() (*ModInfo, error) {
 
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("piping cmd stdout: %w", err)
 	}
 
 	err = cmd.Start()
@@ -37,7 +40,7 @@ func GetModInfo() (*ModInfo, error) {
 	var v ModInfo
 	err = json.NewDecoder(stdout).Decode(&v)
 	if err != nil {
-		return nil, fmt.Errorf("unmarshaling mod info: %w", err)
+		return nil, fmt.Errorf("decoding: %w", err)
 	}
 
 	err = cmd.Wait()
@@ -46,7 +49,26 @@ func GetModInfo() (*ModInfo, error) {
 	}
 
 	if v.GoMod == "" {
-		return nil, errors.New("running out of a module directory")
+		return nil, errors.New("out of module directory")
+	}
+
+	return &v, nil
+}
+
+func ReadConfig(p string) (*Genenv, error) {
+	f, err := os.Open(p)
+	if err != nil {
+		return nil, fmt.Errorf("opening %s: %w", p, err)
+	}
+	defer f.Close()
+
+	dec := yaml.NewDecoder(f)
+	dec.KnownFields(true)
+
+	var v Genenv
+	err = dec.Decode(&v)
+	if err != nil {
+		return nil, fmt.Errorf("decoding: %w", err)
 	}
 
 	return &v, nil

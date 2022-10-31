@@ -2,27 +2,32 @@ package genenv
 
 import (
 	"os"
-	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"golang.org/x/mod/modfile"
 )
 
-func TestGomod(t *testing.T) {
-	var err error
-	var info *ModInfo
-
-	info, err = GetModInfo()
-	require.NoError(t, err)
-
+func (suite *GenenvTestSuite) TestGomod() {
 	var data []byte
-	data, err = os.ReadFile(info.GoMod)
-	require.NoError(t, err)
+	data, err := os.ReadFile(suite.modInfo.GoMod)
+	suite.Require().NoError(err)
 
 	var mf *modfile.File
-	mf, err = modfile.Parse(info.GoMod, data, nil)
-	require.NoError(t, err)
+	mf, err = modfile.Parse(suite.modInfo.GoMod, data, nil)
+	suite.Require().NoError(err)
 
-	assert.Equal(t, "github.com/marcozac/genenv", mf.Module.Mod.String())
+	suite.Require().Equal("github.com/marcozac/genenv", mf.Module.Mod.String())
+}
+
+func (suite *GenenvTestSuite) TestReadConfig() {
+	g, err := ReadConfig(suite.f)
+	suite.NoError(err)
+
+	suite.Require().NotNil(g)
+	suite.Require().NotNil(g.Variables)
+
+	suite.Require().Contains(g.Variables, "FOO")
+	suite.Require().Contains(g.Variables, "BAR")
+
+	suite.Contains(g.Variables["FOO"].Allow, "foo")
+	suite.Contains(g.Variables["BAR"].Deny, "bar")
 }
