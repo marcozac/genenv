@@ -2,28 +2,34 @@ package genenv
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
-	"os"
 	"os/exec"
-
-	"gopkg.in/yaml.v3"
 )
 
 type ModInfo struct {
 	// Path holds the go module path.
-	//   E.g. "github.com/marcozac/genenv"
+	// E.g. "github.com/marcozac/genenv"
 	Path string `json:"Path"`
 
 	// Dir holds the go module directory.
-	//   E.g. "/my/module/directory"
+	// E.g. "/my/module/directory"
 	Dir string `json:"Dir"`
 
 	// GoMod holds the go.mod file path.
-	//   E.g. "/my/module/directory/go.mod"
+	// E.g. "/my/module/directory/go.mod"
 	GoMod string `json:"GoMod"`
 }
 
+// GetModInfo runs "go list -m -json" and returns a [*ModInfo] from its output.
+// If there is an error and the command is running out of a module directory,
+// the error reported is [ErrModDir].
+//
+//	info, err := GetModInfo()
+//	info = &ModInfo{
+//		Path:  "github.com/marcozac/genenv",
+//		Dir:   "/my/module/directory",
+//		GoMod: "/my/module/directory/go.mod",
+//	}
 func GetModInfo() (*ModInfo, error) {
 	cmd := exec.Command("go", "list", "-m", "-json")
 
@@ -49,26 +55,7 @@ func GetModInfo() (*ModInfo, error) {
 	}
 
 	if v.GoMod == "" {
-		return nil, errors.New("out of module directory")
-	}
-
-	return &v, nil
-}
-
-func ReadConfig(p string) (*Genenv, error) {
-	f, err := os.Open(p)
-	if err != nil {
-		return nil, fmt.Errorf("opening %s: %w", p, err)
-	}
-	defer f.Close()
-
-	dec := yaml.NewDecoder(f)
-	dec.KnownFields(true)
-
-	var v Genenv
-	err = dec.Decode(&v)
-	if err != nil {
-		return nil, fmt.Errorf("decoding: %w", err)
+		return nil, ErrModDir
 	}
 
 	return &v, nil
