@@ -35,7 +35,6 @@ func TargetPackage(d string) (name string, found bool, err error) {
 			return "", false, fmt.Errorf("creating target directory: %w", err)
 		}
 		return filepath.Base(d), false, nil
-
 	} else if !info.IsDir() {
 		return "", false, fmt.Errorf("%s is not a directory", d)
 	}
