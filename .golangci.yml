@@ -1,0 +1,53 @@
+run:
+  go: "1.19"
+  timeout: 5m
+
+linters-settings:
+  depguard:
+    include-go-root: true
+    packages:
+      - ioutil
+  dupl:
+    threshold: 100
+  funlen:
+    lines: 115
+    statements: 115
+  gci:
+    sections:
+      - standard
+      - default
+      - prefix(github.com/marcozac/genenv)
+      - blank
+    skip-generated: true
+linters:
+  disable-all: true
+  enable:
+    - depguard
+    - dogsled
+    - dupl
+    - errcheck
+    - funlen
+    - gci
+    - gocritic
+    - gofumpt
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    - misspell
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unused
+    - whitespace
+
+issues:
+  max-same-issues: 0
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - dupl
+        - funlen
+        - gosec
+        - gocritic

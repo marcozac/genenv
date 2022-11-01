@@ -1,0 +1,9 @@
+package: "github.com/marcozac/genenv/testdata/internal/env"
+target: "testdata/internal/env"
+variables:
+  FOO:
+    allow:
+      - foo
+  BAR:
+    deny:
+      - bar
