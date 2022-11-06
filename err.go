@@ -2,9 +2,9 @@ package genenv
 
 import "errors"
 
-// ErrNothing is the error reported when there is nothing to
+// ErrNoVar is the error reported when there is nothing to
 // generate.
-var ErrNothing = errors.New("nothing to generage")
+var ErrNoVar = errors.New("nothing to generate")
 
 // ErrModDir is the error reported trying to get Go module info
 // out of a module directory.

@@ -28,12 +28,7 @@ func NewStrConv() *StrConv {
 func (s *StrConv) ToPascal(str string) string {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-
-	s.B.Reset()
-	if l := len(str) - s.l; l > 0 {
-		s.B.Grow(l)
-		s.l += l
-	}
+	s.reset(str)
 
 	u := true
 	for _, r := range str {
@@ -53,4 +48,23 @@ func (s *StrConv) ToPascal(str string) string {
 	}
 
 	return s.B.String()
+}
+
+func (s *StrConv) ToLower(str string) string {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.reset(str)
+
+	for _, r := range str {
+		s.B.WriteRune(unicode.ToLower(r))
+	}
+	return s.B.String()
+}
+
+func (s *StrConv) reset(str string) {
+	s.B.Reset()
+	if l := len(str) - s.l; l > 0 {
+		s.B.Grow(l)
+		s.l += l
+	}
 }
