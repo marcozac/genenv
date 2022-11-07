@@ -1,7 +1,6 @@
 package genenv
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -10,7 +9,6 @@ import (
 type gen struct {
 	*Config
 	Spec
-	Key, Name string
 }
 
 func Generate(cfg *Config) error {
@@ -24,16 +22,10 @@ func Generate(cfg *Config) error {
 		ParseGlob(filepath.Join("templates", "*.tmpl")))
 
 	var f *os.File
-	sc := NewStrConv()
-	for k, s := range cfg.Variables {
+	for _, s := range cfg.Variables {
 		g.Spec = s
-		g.Key = k
-		g.Name = sc.ToPascal(g.Key)
-		if g.Doc == "" {
-			g.Doc = fmt.Sprintf("// %s returns the value of the environment variable %q.", g.Name, g.Key)
-		}
 
-		f, err = os.Create(filepath.Join(g.Target, sc.ToLower(g.Name)+".go"))
+		f, err = os.Create(filepath.Join(g.Target, cfg.sc.ToLower(s.Name)+".go"))
 		if err != nil {
 			return err
 		}

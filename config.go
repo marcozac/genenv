@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sync"
 
 	"gopkg.in/yaml.v3"
 )
@@ -23,6 +24,18 @@ type Spec struct {
 	// Default:
 	//   // <FuncName> returns the value of the environment variable <Key>.
 	Doc string
+
+	// Key holds the environment variable key.
+	//
+	// NOTE:
+	// Do not configure this field: overwritten by initialization.
+	Key string `json:"-" yaml:"-"`
+
+	// Name holds the name of the function to generate.
+	//
+	// NOTE:
+	// Do not configure this field: overwritten by initialization.
+	Name string `json:"-" yaml:"-"`
 
 	// @TODO
 	// Convert value to type.
@@ -49,6 +62,9 @@ type Config struct {
 	Variables map[string]Spec `json:"variables" yaml:"variables"`
 
 	mod *ModInfo
+
+	mu sync.Mutex
+	sc *StrConv
 }
 
 func (c *Config) init() error {
@@ -95,6 +111,19 @@ func (c *Config) init() error {
 	if name != c.Package && found {
 		return fmt.Errorf("inconsistent package name %s: found %s in %s", c.Package, name, c.Target)
 	}
+
+	c.sc = NewStrConv()
+	c.mu.Lock()
+	for k, s := range c.Variables {
+		s.Key = k
+		s.Name = c.sc.ToPascal(k)
+		if s.Doc == "" {
+			s.Doc = fmt.Sprintf("// %s returns the value of the environment variable %q.", s.Name, s.Key)
+		}
+
+		c.Variables[k] = s
+	}
+	c.mu.Unlock()
 
 	return nil
 }
