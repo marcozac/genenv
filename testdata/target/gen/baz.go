@@ -4,6 +4,7 @@ package env
 
 import "os"
 
+// doc comment
 func Baz() string {
 	return os.Getenv("BAZ")
 }

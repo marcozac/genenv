@@ -1,6 +1,7 @@
 package genenv
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -27,7 +28,10 @@ func Generate(cfg *Config) error {
 	for k, s := range cfg.Variables {
 		g.Spec = s
 		g.Key = k
-		g.Name = sc.ToPascal(k)
+		g.Name = sc.ToPascal(g.Key)
+		if g.Doc == "" {
+			g.Doc = fmt.Sprintf("// %s returns the value of the environment variable %q.", g.Name, g.Key)
+		}
 
 		f, err = os.Create(filepath.Join(g.Target, sc.ToLower(g.Name)+".go"))
 		if err != nil {

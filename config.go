@@ -17,6 +17,13 @@ type Spec struct {
 	// No entries means "nothing".
 	Deny []string `json:"deny" yaml:"deny"`
 
+	// Doc allows to document the generated function by an optional
+	// godoc comment.
+	//
+	// Default:
+	//   // <FuncName> returns the value of the environment variable <Key>.
+	Doc string
+
 	// @TODO
 	// Convert value to type.
 	// Type string

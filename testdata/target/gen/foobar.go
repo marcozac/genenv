@@ -7,6 +7,7 @@ import (
 	"os"
 )
 
+// FooBar returns the value of the environment variable "FOO_BAR".
 func FooBar() (string, error) {
 	v := os.Getenv("FOO_BAR")
 	
