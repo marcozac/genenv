@@ -23,7 +23,7 @@ func rootCmd() *cobra.Command {
 			var err error
 			cfg, err = genenv.ReadConfig(cfgFile)
 			if err != nil {
-				return fmt.Errorf("configuration file not found in %s", cfgFile)
+				return fmt.Errorf("reading configuration file %s: %w", cfgFile, err)
 			}
 			return nil
 		},
