@@ -39,6 +39,8 @@ jobs:
           key: ${{ runner.os }}-go${{ matrix.go-version }}-${{ hashFiles('**/go.mod') }}-${{ hashFiles('**/go.sum') }}
       - name: Run tests
         run: go test -v -race ./...
+      - name: Check changes
+        run: go run internal/tools/ci_genenv.go
   coverage:
     needs: test
     runs-on: ubuntu-latest
