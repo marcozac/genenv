@@ -1,5 +1,5 @@
 package: "env"
-target: "testdata/internal/env"
+target: "testdata/cmd/env"
 variables:
   FOO:
     allow:
