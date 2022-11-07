@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -11,31 +12,33 @@ import (
 var (
 	cfg     *genenv.Config
 	cfgFile string
-	rootCmd = &cobra.Command{
+	fatal   = log.Fatal
+)
+
+func rootCmd() *cobra.Command {
+	cmd := &cobra.Command{
 		Use:   "genenv",
 		Short: "A generator for environment variables based configurations",
-		PreRun: func(cmd *cobra.Command, args []string) {
+		PreRunE: func(cmd *cobra.Command, args []string) error {
 			var err error
 			cfg, err = genenv.ReadConfig(cfgFile)
 			if err != nil {
-				log.Fatalf("configuration file not found in %s", cfgFile)
+				return fmt.Errorf("configuration file not found in %s", cfgFile)
 			}
+			return nil
 		},
-		Run: func(cmd *cobra.Command, args []string) {
-			err := genenv.Generate(cfg)
-			if err != nil {
-				log.Fatal(err)
-			}
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return genenv.Generate(cfg)
 		},
 	}
-)
+	cmd.PersistentFlags().
+		StringVar(&cfgFile, "config", ".genenv.yml", "configuration file path")
+	return cmd
+}
 
 func main() {
-	rootCmd.PersistentFlags().
-		StringVar(&cfgFile, "config", ".genenv.yml", "configuration file path")
-
-	err := rootCmd.Execute()
+	err := rootCmd().Execute()
 	if err != nil {
-		log.Fatal(err)
+		fatal(err)
 	}
 }
