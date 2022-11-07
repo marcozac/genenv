@@ -43,6 +43,14 @@ func (suite *GenenvTestSuite) TestGenerate() {
 			"BAZ": {
 				Doc: "// doc comment",
 			},
+			"FOO_BAZ": {
+				Required: true,
+			},
+			"BAR_BAZ": {
+				Required: true,
+				Allow:    []string{"foo"},
+				Deny:     []string{"bar"},
+			},
 		},
 	}
 

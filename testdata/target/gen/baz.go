@@ -6,5 +6,6 @@ import "os"
 
 // doc comment
 func Baz() string {
-	return os.Getenv("BAZ")
+	v := os.Getenv("BAZ")
+	return v
 }

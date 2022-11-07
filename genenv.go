@@ -6,11 +6,6 @@ import (
 	"text/template"
 )
 
-type gen struct {
-	*Config
-	Spec
-}
-
 func Generate(cfg *Config) error {
 	err := cfg.init()
 	if err != nil {
@@ -38,4 +33,9 @@ func Generate(cfg *Config) error {
 	}
 
 	return nil
+}
+
+type gen struct {
+	*Config
+	Spec
 }
