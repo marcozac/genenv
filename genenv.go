@@ -3,6 +3,7 @@ package genenv
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"text/template"
 )
 
@@ -12,9 +13,10 @@ func Generate(cfg *Config) error {
 		return err
 	}
 
+	_, gf, _, _ := runtime.Caller(0)
 	g := gen{Config: cfg}
 	tmpl := template.Must(template.New("env.tmpl").
-		ParseGlob(filepath.Join("templates", "*.tmpl")))
+		ParseGlob(filepath.Join(filepath.Dir(gf), "templates", "*.tmpl")))
 
 	var f *os.File
 	for _, s := range cfg.Variables {

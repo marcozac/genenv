@@ -1,4 +1,4 @@
-package: "github.com/marcozac/genenv/testdata/internal/env"
+package: "env"
 target: "testdata/internal/env"
 variables:
   FOO:

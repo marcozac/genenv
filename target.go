@@ -8,9 +8,6 @@ import (
 	"path/filepath"
 )
 
-
-
-
 // TargetPackage is an utility function to get the package name from its target
 // directory.
 //
