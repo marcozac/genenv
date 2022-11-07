@@ -33,26 +33,27 @@ func (suite *GenenvTestSuite) TestGenerate() {
 	cfg := &Config{
 		Package: "env",
 		Target:  filepath.Join("testdata", "target", "gen"),
-		Variables: map[string]Spec{
-			"FOO": {Allow: []string{"foo"}},
-			"BAR": {Deny: []string{"bar"}},
-			"FOO_BAR": {
-				Allow: []string{"foo"},
-				Deny:  []string{"bar"},
-			},
-			"BAZ": {
-				Doc: "// doc comment",
-			},
-			"FOO_BAZ": {
-				Required: true,
-			},
-			"BAR_BAZ": {
-				Required: true,
-				Allow:    []string{"foo"},
-				Deny:     []string{"bar"},
-			},
+	}
+	suite.ErrorIs(Generate(cfg), ErrNoVar)
+
+	cfg.Variables = map[string]Spec{
+		"FOO": {Allow: []string{"foo"}},
+		"BAR": {Deny: []string{"bar"}},
+		"FOO_BAR": {
+			Allow: []string{"foo"},
+			Deny:  []string{"bar"},
+		},
+		"BAZ": {
+			Doc: "// doc comment",
+		},
+		"FOO_BAZ": {
+			Required: true,
+		},
+		"BAR_BAZ": {
+			Required: true,
+			Allow:    []string{"foo"},
+			Deny:     []string{"bar"},
 		},
 	}
-
 	suite.NoError(Generate(cfg))
 }
