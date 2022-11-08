@@ -1,0 +1,13 @@
+{{- define "allow" }}
+	allowed := []string{
+	{{- range $i, $x := .Allow }}
+		{{ printf "%q" $x }},
+	{{- end }}
+	}
+	for _, s := range allowed {
+		if s == v {
+			return v, nil
+		}
+	}
+	return "", fmt.Errorf("%s not allowed", v)
+{{- end }}

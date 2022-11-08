@@ -1,5 +1,5 @@
-package: "github.com/marcozac/genenv/testdata/internal/env"
-target: "testdata/internal/env"
+package: "env"
+target: "testdata/cmd/env"
 variables:
   FOO:
     allow:

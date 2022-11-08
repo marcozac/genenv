@@ -5,33 +5,6 @@ import (
 	"path/filepath"
 )
 
-func (suite *GenenvTestSuite) TestReadConfig() {
-	g, err := ReadConfig(suite.f)
-	suite.NoError(err)
-
-	suite.Require().NotNil(g)
-	suite.Require().NotNil(g.Variables)
-
-	suite.Require().Contains(g.Variables, "FOO")
-	suite.Require().Contains(g.Variables, "BAR")
-
-	suite.Contains(g.Variables["FOO"].Allow, "foo")
-	suite.Contains(g.Variables["BAR"].Deny, "bar")
-
-	// Open error.
-	p := filepath.Join(suite.d, "readconfigfake")
-	suite.NoFileExists(p)
-	_, err = ReadConfig(p)
-	suite.Error(err)
-
-	// Decode error.
-	var f *os.File
-	f, err = os.CreateTemp(suite.d, "*")
-	suite.NoError(err)
-	_, err = ReadConfig(f.Name())
-	suite.Error(err)
-}
-
 func (suite *GenenvTestSuite) TestTargetPackage() {
 	// Package exists (aliased).
 	name, found, err := TargetPackage(filepath.Join("testdata", "target", "ok"))

@@ -51,3 +51,6 @@ issues:
         - funlen
         - gosec
         - gocritic
+    - linters:
+        - dogsled
+      source: "^.* runtime.Caller\\(0\\)"

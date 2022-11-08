@@ -1,0 +1,12 @@
+{{- define "deny" }}
+	denied := []string{
+	{{- range $i, $x := .Deny }}
+		{{ printf "%q" $x }},
+	{{- end }}
+	}
+	for _, d := range denied {
+		if d == v {
+			return "", fmt.Errorf("%s not allowed", v)
+		}
+	}
+{{- end }}
